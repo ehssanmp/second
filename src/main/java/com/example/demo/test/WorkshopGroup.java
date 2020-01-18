@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 @Entity
@@ -16,9 +17,9 @@ public class WorkshopGroup {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@OneToMany
-	private List<Grader> graders ;
-	
+	@OneToOne
+	private Grader graders ;
+
 	@OneToMany
 	private List<Attendant> attendant;
 	
@@ -36,13 +37,6 @@ public class WorkshopGroup {
 		this.id = id;
 	}
 
-	public List<Grader> getGraders() {
-		return graders;
-	}
-
-	public void setGraders(List<Grader> graders) {
-		this.graders = graders;
-	}
 
 	public WorkShop getWorkshop() {
 		return workshop;
@@ -50,6 +44,30 @@ public class WorkshopGroup {
 
 	public void setWorkshop(WorkShop workshop) {
 		this.workshop = workshop;
+	}
+
+	public List<Attendant> getAttendant() {
+		return attendant;
+	}
+
+	public void setAttendant(List<Attendant> attendant) {
+		this.attendant = attendant;
+	}
+
+	public List<GraderFormAnswerSheet> getGroupformanswersheet() {
+		return groupformanswersheet;
+	}
+
+	public void setGroupformanswersheet(List<GraderFormAnswerSheet> groupformanswersheet) {
+		this.groupformanswersheet = groupformanswersheet;
+	}
+
+	public Grader getGraders() {
+		return graders;
+	}
+
+	public void setGraders(Grader graders) {
+		this.graders = graders;
 	}
 	
 
