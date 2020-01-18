@@ -17,48 +17,35 @@ public class User {
   @Column(name = "name")
   private String name;
   
-  @Column(name = "family_name")
-  private String FamilyName;
+  @Column(name = "familyname")
+  private String familyname;
   
-  @Column(name="user_name")
-  private String UserName;
+  @Column(name="username")
+  private String username;
   
   @Column(name="password")
-  private String Password;
+  private String password;
   
-  @Column(name = "national_code")
-  private String NationalCode;
+  @Column(name = "nationalcode")
+  private String nationalcode;
   
-  @Column(name="phone_number")
-  private String PhoneNumber;
+  @Column(name="phonenumber")
+  private String phonenumber;
   
   @Column(name = "age")
-  private String Age;
+  private String age;
   
   @Column(name="sex")
-  private String Sex;
+  private String sex;
   
   @Column(name = "nationality")
-  private String Nationality;
+  private String nationality;
   
-  @Column(name= "last_dgree_state")
-  private String LastDegreeState; 
+  @Column(name= "lastdegreestate")
+  private String lastdegreestate; 
   
   @OneToMany
   private List<UserRoleRelation> userrelation;
-  
-  public User(String name , String username ,String familyname ,String password , String nationalcode ,String phonenumber,String age ,String sex,String natinality,String lastdegreestate, String LastDegreeState) {
-	 this.name = name;
-	 this.FamilyName = familyname;
-	 this.Age = age ;
-	 this.LastDegreeState= LastDegreeState;
-	 this.NationalCode=nationalcode;
-	 this.Nationality= natinality;
-	 this.Password=password;
-	 this.PhoneNumber= phonenumber;
-	 this.Sex = sex;
-	 this.UserName = username;
-  }
 
 public Integer getId() {
 	return id;
@@ -76,76 +63,76 @@ public void setName(String name) {
 	this.name = name;
 }
 
-public String getFamilyName() {
-	return FamilyName;
+public String getFamilyname() {
+	return familyname;
 }
 
-public void setFamilyName(String familyName) {
-	FamilyName = familyName;
+public void setFamilyname(String familyname) {
+	this.familyname = familyname;
 }
 
-public String getUserName() {
-	return UserName;
+public String getUsername() {
+	return username;
 }
 
-public void setUserName(String userName) {
-	UserName = userName;
+public void setUsername(String username) {
+	this.username = username;
 }
 
 public String getPassword() {
-	return Password;
+	return password;
 }
 
 public void setPassword(String password) {
-	Password = password;
+	this.password = password;
 }
 
-public String getNationalCode() {
-	return NationalCode;
+public String getNationalcode() {
+	return nationalcode;
 }
 
-public void setNationalCode(String nationalCode) {
-	NationalCode = nationalCode;
+public void setNationalcode(String nationalcode) {
+	this.nationalcode = nationalcode;
 }
 
-public String getPhoneNumber() {
-	return PhoneNumber;
+public String getPhonenumber() {
+	return phonenumber;
 }
 
-public void setPhoneNumber(String phoneNumber) {
-	PhoneNumber = phoneNumber;
+public void setPhonenumber(String phonenumber) {
+	this.phonenumber = phonenumber;
 }
 
 public String getAge() {
-	return Age;
+	return age;
 }
 
 public void setAge(String age) {
-	Age = age;
+	this.age = age;
 }
 
 public String getSex() {
-	return Sex;
+	return sex;
 }
 
 public void setSex(String sex) {
-	Sex = sex;
+	this.sex = sex;
 }
 
 public String getNationality() {
-	return Nationality;
+	return nationality;
 }
 
 public void setNationality(String nationality) {
-	Nationality = nationality;
+	this.nationality = nationality;
 }
 
-public String getLastDegreeState() {
-	return LastDegreeState;
+public String getLastdegreestate() {
+	return lastdegreestate;
 }
 
-public void setLastDegreeState(String lastDegreeState) {
-	LastDegreeState = lastDegreeState;
+public void setLastdegreestate(String lastdegreestate) {
+	this.lastdegreestate = lastdegreestate;
 }
 
 public List<UserRoleRelation> getUserrelation() {
@@ -156,5 +143,6 @@ public void setUserrelation(List<UserRoleRelation> userrelation) {
 	this.userrelation = userrelation;
 }
   
-  
+
+
 }
