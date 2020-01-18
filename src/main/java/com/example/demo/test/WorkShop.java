@@ -3,6 +3,7 @@ package com.example.demo.test;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,31 +22,38 @@ public class WorkShop {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-
+	@Column(name = "Name")
 	private String Name;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name = "Start")
 	private Date Start;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name = "End")
 	private Date End;
 	
 	@Temporal(TemporalType.TIME)
+	@Column(name = "StartTime")
 	private Date StartTime;
 	
 	@Temporal(TemporalType.TIME)
+	@Column(name = "EndTime")
 	private Date EndTime;
 	
-	
+	@Column(name = "Days")
 	private String Days;
 	
-	
+	@Column(name = "Adress")
 	private String Adress;
 	
+	@Column(name = "Price")
 	private int Price;
 	
+	@Column(name = "PaymentCounts")
 	private int PaymentCounts;
 	
+	@Column(name = "Payments")
 	private int Payments;
 
 	public Integer getId() {

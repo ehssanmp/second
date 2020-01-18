@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 // CRUD refers Create, Read, Update, Delete
 import com.example.demo.test.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
-	List<User> findByUsername(String username);
+	User findByUsername(String username);
 }

@@ -7,12 +7,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy=GenerationType.SEQUENCE)
   private Integer id;
+  
+  
   
   @Column(name = "name")
   private String name;
@@ -142,6 +145,8 @@ public List<UserRoleRelation> getUserrelation() {
 public void setUserrelation(List<UserRoleRelation> userrelation) {
 	this.userrelation = userrelation;
 }
+
+
   
 
 
