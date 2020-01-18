@@ -55,6 +55,38 @@ public class WorkShop {
 	
 	@Column(name = "Payments")
 	private int Payments;
+	
+	@OneToMany
+	private List<Form> form;
+	
+	@OneToMany
+	private List<WorkshopGroup> EventGroup;
+
+	@OneToOne
+	private Supervisor supervisor;
+	public List<Form> getForm() {
+		return form;
+	}
+
+	public void setForm(List<Form> form) {
+		this.form = form;
+	}
+
+	public List<WorkshopGroup> getEventGroup() {
+		return EventGroup;
+	}
+
+	public void setEventGroup(List<WorkshopGroup> eventGroup) {
+		EventGroup = eventGroup;
+	}
+
+	public Supervisor getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(Supervisor supervisor) {
+		this.supervisor = supervisor;
+	}
 
 	public Integer getId() {
 		return id;
