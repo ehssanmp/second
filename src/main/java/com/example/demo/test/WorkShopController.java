@@ -56,7 +56,7 @@ public class WorkShopController {
 	}
 	
 	@PostMapping(path="/creation")
-	public ResponseEntity<HashMap> CreateEvent(@RequestBody WorkShop workshop, User user){
+	public ResponseEntity<HashMap> CreateEvent(@RequestBody WorkSup wrk){
 		HashMap<String, String> jsn = new HashMap<>();
 		List<UserRoleRelation> s= new List<UserRoleRelation>() {
 			
@@ -200,27 +200,27 @@ public class WorkShopController {
 		};
 		UserRoleRelation userroleR =new UserRoleRelation();
 		Supervisor supervisor= new Supervisor();
-		supervisor.setWorkshop(workshop);
-		User usr= new User();
+		supervisor.setWorkshop(wrk.getWork());
+		User usr= userRepository.getOne(wrk.getUs());
 		userroleR.setActive(true);
-		userroleR.setStart(workshop.getStart());
-		userroleR.setEnd(workshop.getEnd());
-		userroleR.setUser(user);
+		userroleR.setStart(wrk.getWork().getStart());
+		userroleR.setEnd(wrk.getWork().getEnd());
+		userroleR.setUser(usr);
 		userroleR.setWorkshoprole(supervisor);
 		s.add(userroleR);
-		if(user.getUserrelation()==null) {
+		if(usr.getUserrelation()==null) {
 			
-			user.setUserrelation(s);
-			//userRepository.save(user);
+			usr.setUserrelation(s);
+			userRepository.save(usr);
 		}
 		else {
 			supervisor.setUserrolerelations(s);
-			user.getUserrelation().add(userroleR);
-			//userRepository.save(user);
+			usr.getUserrelation().add(userroleR);
+			userRepository.save(usr);
 		}
 		//userRepository.save(user);
 		jsn.put("msg", "workshopcreated successfully");
-		workshopRepository.save(workshop);
+		workshopRepository.save(wrk.getWork());
 		superrep.save(supervisor);
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
@@ -699,17 +699,9 @@ public class WorkShopController {
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
 	@PostMapping(path = "/graderreq")
-	public ResponseEntity<HashMap> graderreq(@RequestBody Integer id){
-		HashMap<String, Integer> jsn= new HashMap<>();
-		jsn.put("id", id);
-		jsn.put("msg", 1);
-		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-		
-	}
-	@PostMapping(path = "/graderset")
-	public ResponseEntity<HashMap> graderSet(@RequestBody WorkShop workshop,User user){
-		HashMap<String, String> jsn = new HashMap<>();
-		List<UserRoleRelation> s= new List<UserRoleRelation>() {
+	public ResponseEntity<HashMap> graderreq(@RequestBody WorkSup eventGrader){
+		HashMap<String, String> jsn= new HashMap<>();
+		List<User> users= new List<User>() {
 			
 			@Override
 			public <T> T[] toArray(T[] a) {
@@ -724,7 +716,7 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public List<UserRoleRelation> subList(int fromIndex, int toIndex) {
+			public List<User> subList(int fromIndex, int toIndex) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -736,7 +728,7 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public UserRoleRelation set(int index, UserRoleRelation element) {
+			public User set(int index, User element) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -754,7 +746,7 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public UserRoleRelation remove(int index) {
+			public User remove(int index) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -766,13 +758,13 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public ListIterator<UserRoleRelation> listIterator(int index) {
+			public ListIterator<User> listIterator(int index) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
-			public ListIterator<UserRoleRelation> listIterator() {
+			public ListIterator<User> listIterator() {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -784,7 +776,7 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public Iterator<UserRoleRelation> iterator() {
+			public Iterator<User> iterator() {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -802,7 +794,7 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public UserRoleRelation get(int index) {
+			public User get(int index) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -826,62 +818,38 @@ public class WorkShopController {
 			}
 			
 			@Override
-			public boolean addAll(int index, Collection<? extends UserRoleRelation> c) {
+			public boolean addAll(int index, Collection<? extends User> c) {
 				// TODO Auto-generated method stub
 				return false;
 			}
 			
 			@Override
-			public boolean addAll(Collection<? extends UserRoleRelation> c) {
+			public boolean addAll(Collection<? extends User> c) {
 				// TODO Auto-generated method stub
 				return false;
 			}
 			
 			@Override
-			public void add(int index, UserRoleRelation element) {
+			public void add(int index, User element) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public boolean add(UserRoleRelation e) {
+			public boolean add(User e) {
 				// TODO Auto-generated method stub
 				return false;
 			}
 		};
-		UserRoleRelation userroleR =new UserRoleRelation();
-		Grader grader= new Grader();
-		for(int i=0;i<workshop.getEventGroup().size();++i) {
-			if(workshop.getEventGroup().get(i)==null) {
-				workshop.getEventGroup().get(i).setGraders(grader);
-				break;
-			}
-			else {
-				continue;
-				
-			}
-		}
-		User usr= new User();
-		userroleR.setActive(true);
-		userroleR.setStart(workshop.getStart());
-		userroleR.setEnd(workshop.getEnd());
-		userroleR.setUser(user);
-		userroleR.setWorkshoprole(grader);
-		s.add(userroleR);
-		if(user.getUserrelation()==null) {
-			
-			user.setUserrelation(s);
-			//userRepository.save(user);
-		}
-		else {
-			grader.setUserrolerelations(s);
-			user.getUserrelation().add(userroleR);
-			//userRepository.save(user);
-		}
-		//userRepository.save(user);
-		jsn.put("msg", "workshopcreated successfully");
-		workshopRepository.save(workshop);
-		graderRepository.save(grader);
+		User usr=userRepository.getOne(eventGrader.getUs());
+		System.out.println(usr.getAge());
+		users.add(usr);
+		eventGrader.getWork().getSupervisor().setUsers(users);
+		workshopRepository.save(eventGrader.getWork());
+		superrep.save(eventGrader.getWork().getSupervisor());
+		jsn.put("msg", "done");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+		
 	}
+	
 }
