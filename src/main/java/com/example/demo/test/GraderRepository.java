@@ -1,7 +1,8 @@
 package com.example.demo.test;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface GraderRepository extends CrudRepository<Grader, Integer>{
+public interface GraderRepository extends JpaRepository<Grader, Integer>{
 
 }

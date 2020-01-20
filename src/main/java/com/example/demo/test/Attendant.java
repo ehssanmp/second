@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -17,10 +18,10 @@ public class Attendant extends WorkshopRole{
 	
 	private int Absences;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkshopGroup groups;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<AttendFormAnswerSheet> attendformanswersheet;
 
 	public boolean isIsPassed() {

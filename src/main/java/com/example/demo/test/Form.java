@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ public class Form {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Integer id;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	protected WorkShop event;
 	
 	@ElementCollection

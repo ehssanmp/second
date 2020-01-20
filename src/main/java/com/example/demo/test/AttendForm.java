@@ -9,17 +9,4 @@ import javax.persistence.OneToMany;
 @Entity
 public class AttendForm extends Form {
 	
-	@OneToMany
-	private List<AttendFormAnswerSheet> attendformanswersheet;
-
-	public List<AttendFormAnswerSheet> getAttendformanswersheet() {
-		return attendformanswersheet;
-	}
-
-	public void setAttendformanswersheet(List<AttendFormAnswerSheet> attendformanswersheet) {
-		this.attendformanswersheet = attendformanswersheet;
-	}
-
-	
-	
 }

@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,13 +18,10 @@ public class GraderFormAnswerSheet {
 	private Integer id;
 	
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Supervisor superVisor;
 	
-	@ManyToOne
-	private GraderForm graderForm;
-	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Grader grader;
 	
 	@ElementCollection
@@ -43,14 +41,6 @@ public class GraderFormAnswerSheet {
 
 	public void setSuperVisor(Supervisor superVisor) {
 		this.superVisor = superVisor;
-	}
-
-	public GraderForm getGraderForm() {
-		return graderForm;
-	}
-
-	public void setGraderForm(GraderForm graderForm) {
-		this.graderForm = graderForm;
 	}
 
 	public Grader getGrader() {

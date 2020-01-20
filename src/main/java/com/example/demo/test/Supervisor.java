@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class Supervisor extends WorkshopRole{
 
-	@OneToMany 
+	@OneToMany (cascade = CascadeType.ALL)
 	private List<User> users;
 	
 	public List<User> getUsers() {
@@ -23,21 +24,11 @@ public class Supervisor extends WorkshopRole{
 		this.users = users;
 	}
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private WorkShop workshop;
 	
-	@Column(name = "idName")
-	private int idName;
-	
-	public int getIdName() {
-		return idName;
-	}
 
-	public void setIdName(int idName) {
-		this.idName = idName;
-	}
-
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<GraderFormAnswerSheet> graderformanswersheet;
 
 	public WorkShop getWorkshop() {

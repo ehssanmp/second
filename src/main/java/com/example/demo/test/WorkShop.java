@@ -3,6 +3,7 @@ package com.example.demo.test;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,47 +23,47 @@ public class WorkShop {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@Column(name = "Name")
-	private String Name;
+	@Column(name = "name")
+	private String name;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name = "Start")
-	private Date Start;
+	@Column(name = "start")
+	private Date start;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name = "End")
-	private Date End;
+	@Column(name = "end")
+	private Date end;
 	
 	@Temporal(TemporalType.TIME)
-	@Column(name = "StartTime")
-	private Date StartTime;
+	@Column(name = "starttime")
+	private Date starttime;
 	
 	@Temporal(TemporalType.TIME)
-	@Column(name = "EndTime")
-	private Date EndTime;
+	@Column(name = "endtime")
+	private Date endtime;
 	
-	@Column(name = "Days")
-	private String Days;
+	@Column(name = "days")
+	private String days;
 	
-	@Column(name = "Adress")
-	private String Adress;
+	@Column(name = "adress")
+	private String adress;
 	
-	@Column(name = "Price")
-	private int Price;
+	@Column(name = "price")
+	private int price;
 	
-	@Column(name = "PaymentCounts")
-	private int PaymentCounts;
+	@Column(name = "paymentcounts")
+	private int paymentcounts;
 	
-	@Column(name = "Payments")
-	private int Payments;
+	@Column(name = "payments")
+	private int payments;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Form> form;
 	
-	@OneToMany
-	private List<WorkshopGroup> EventGroup;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<WorkshopGroup> eventgroup;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Supervisor supervisor;
 	public List<Form> getForm() {
 		return form;
@@ -73,11 +74,11 @@ public class WorkShop {
 	}
 
 	public List<WorkshopGroup> getEventGroup() {
-		return EventGroup;
+		return eventgroup;
 	}
 
 	public void setEventGroup(List<WorkshopGroup> eventGroup) {
-		EventGroup = eventGroup;
+		eventgroup = eventGroup;
 	}
 
 	public Supervisor getSupervisor() {
@@ -97,85 +98,84 @@ public class WorkShop {
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public Date getStart() {
-		return Start;
+		return start;
 	}
 
 	public void setStart(Date start) {
-		Start = start;
+		this.start = start;
 	}
 
 	public Date getEnd() {
-		return End;
+		return end;
 	}
 
 	public void setEnd(Date end) {
-		End = end;
+		this.end = end;
 	}
 
-	public Date getStartTime() {
-		return StartTime;
+	public Date getStarttime() {
+		return starttime;
 	}
 
-	public void setStartTime(Date startTime) {
-		StartTime = startTime;
+	public void setStarttime(Date starttime) {
+		this.starttime = starttime;
 	}
 
-	public Date getEndTime() {
-		return EndTime;
+	public Date getEndtime() {
+		return endtime;
 	}
 
-	public void setEndTime(Date endTime) {
-		EndTime = endTime;
+	public void setEndtime(Date endtime) {
+		this.endtime = endtime;
 	}
 
 	public String getDays() {
-		return Days;
+		return days;
 	}
 
 	public void setDays(String days) {
-		Days = days;
+		this.days = days;
 	}
 
 	public String getAdress() {
-		return Adress;
+		return adress;
 	}
 
 	public void setAdress(String adress) {
-		Adress = adress;
+		this.adress = adress;
 	}
 
 	public int getPrice() {
-		return Price;
+		return price;
 	}
 
 	public void setPrice(int price) {
-		Price = price;
+		this.price = price;
 	}
 
-	public int getPaymentCounts() {
-		return PaymentCounts;
+	public int getPaymentcounts() {
+		return paymentcounts;
 	}
 
-	public void setPaymentCounts(int paymentCounts) {
-		PaymentCounts = paymentCounts;
+	public void setPaymentcounts(int paymentcounts) {
+		this.paymentcounts = paymentcounts;
 	}
 
 	public int getPayments() {
-		return Payments;
+		return payments;
 	}
 
 	public void setPayments(int payments) {
-		Payments = payments;
-	}
-	
+		this.payments = payments;
+	}	
 	
 	
 }

@@ -33,10 +33,9 @@ public class UserController {
     // @RequestParam means it is a parameter from the GET or POST reques
 	  HashMap<String, Integer> js= new HashMap<>();
 	  HashMap<String, String> js2= new HashMap<>();
-	  User us= new User();
-	  
+	  User us= new User(); 
 	  us=userRepository.findByUsername(user.getUsername());
-	  if(!us.equals(null)){
+	  if(us!=null){
 		  js2.put("id", "user duplicate");
 		  return new ResponseEntity(js2,HttpStatus.CONFLICT);
 	  }
@@ -53,7 +52,7 @@ public class UserController {
 	   HashMap<String, Null> jsn= new HashMap<>();
 	   HashMap<String,Integer> jsn2= new HashMap<>(); 
 	   User user=userRepository.findByUsername(usr.getUsername()) ;
-	   if(user.equals(null)) {
+	   if(user==null) {
 		   return new ResponseEntity(jsn,HttpStatus.CONFLICT);
 	   }
 	   if(user.getPassword().equals(usr.getPassword())) {

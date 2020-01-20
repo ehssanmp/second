@@ -3,6 +3,7 @@ package com.example.demo.test;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +26,11 @@ public class AttendFormAnswerSheet {
 	@DateTimeFormat
 	private Date date;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Grader grader;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Attendant attendat;
-	
-	@ManyToOne
-	private AttendForm attendantForm;
 
 	public Integer getId() {
 		return id;
@@ -72,15 +70,6 @@ public class AttendFormAnswerSheet {
 
 	public void setAttendat(Attendant attendat) {
 		this.attendat = attendat;
-	}
-
-	public AttendForm getAttendantForm() {
-		return attendantForm;
-	}
-
-	public void setAttendantForm(AttendForm attendantForm) {
-		this.attendantForm = attendantForm;
-	}
-	
+	}	
 	
 }

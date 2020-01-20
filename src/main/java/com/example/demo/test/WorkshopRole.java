@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ public class WorkshopRole {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected int iD;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
     List<UserRoleRelation> userrolerelations ;
 
 	public int getiD() {

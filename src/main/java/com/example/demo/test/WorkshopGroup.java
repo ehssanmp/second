@@ -1,6 +1,8 @@
 package com.example.demo.test;
 
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,16 +19,17 @@ public class WorkshopGroup {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@OneToOne
-	private Grader graders ;
+	@OneToMany(cascade = CascadeType.ALL)
+	
+	private List<Grader> graders ;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Attendant> attendant;
 	
-	@OneToMany
-	private List<GraderFormAnswerSheet> groupformanswersheet;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<GroupFormAnswerSheet> groupformanswersheet;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkShop workshop;
 
 	public Integer getId() {
@@ -54,19 +57,19 @@ public class WorkshopGroup {
 		this.attendant = attendant;
 	}
 
-	public List<GraderFormAnswerSheet> getGroupformanswersheet() {
+	public List<GroupFormAnswerSheet> getGroupformanswersheet() {
 		return groupformanswersheet;
 	}
 
-	public void setGroupformanswersheet(List<GraderFormAnswerSheet> groupformanswersheet) {
+	public void setGroupformanswersheet(List<GroupFormAnswerSheet> groupformanswersheet) {
 		this.groupformanswersheet = groupformanswersheet;
 	}
 
-	public Grader getGraders() {
+	public List<Grader> getGraders() {
 		return graders;
 	}
 
-	public void setGraders(Grader graders) {
+	public void setGraders(List<Grader> graders) {
 		this.graders = graders;
 	}
 	

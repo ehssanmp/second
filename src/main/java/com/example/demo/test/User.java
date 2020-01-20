@@ -1,6 +1,7 @@
 package com.example.demo.test;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class User {
   @Column(name= "lastdegreestate")
   private String lastdegreestate; 
   
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   private List<UserRoleRelation> userrelation;
 
 public Integer getId() {

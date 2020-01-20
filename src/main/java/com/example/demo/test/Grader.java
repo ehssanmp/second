@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
@@ -14,13 +15,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @Entity
 public class Grader extends WorkshopRole{
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkshopGroup group;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<GraderFormAnswerSheet> graderformanswersheet;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<AttendFormAnswerSheet> attendformanswersheet;
 
 	public WorkshopGroup getGroup() {

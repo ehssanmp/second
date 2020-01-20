@@ -5,7 +5,7 @@ import java.util.List;
 public class WorkGroupUSer {
 
 	private WorkShop event;
-	private List<Integer> id;
+	private int id;
 	private int indx;
 	public WorkShop getEvent() {
 		return event;
@@ -13,10 +13,10 @@ public class WorkGroupUSer {
 	public void setEvent(WorkShop event) {
 		this.event = event;
 	}
-	public List<Integer> getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(List<Integer> id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public int getIndx() {

@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,10 +24,10 @@ public class UserRoleRelation {
 	
 	private boolean Active;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private User user;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkshopRole workshoprole;
 
 	public Integer getiD() {

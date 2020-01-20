@@ -2,6 +2,7 @@ package com.example.demo.test;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,10 +19,7 @@ public class GroupFormAnswerSheet {
 	@GeneratedValue(strategy =GenerationType.AUTO)
 	private Integer id;
 	
-	@ManyToOne
-	private GroupForm groupform;
-	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkshopGroup workshopgroup;
 	
 	@ElementCollection
@@ -33,14 +31,6 @@ public class GroupFormAnswerSheet {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public GroupForm getGroupform() {
-		return groupform;
-	}
-
-	public void setGroupform(GroupForm groupform) {
-		this.groupform = groupform;
 	}
 
 	public WorkshopGroup getWorkshopgroup() {
