@@ -64,10 +64,6 @@ public class WorkShop {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Form> form;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn
-	private List<WorkshopGroup> eventgroup;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Supervisor supervisor;
@@ -77,14 +73,6 @@ public class WorkShop {
 
 	public void setForm(List<Form> form) {
 		this.form = form;
-	}
-
-	public List<WorkshopGroup> getEventGroup() {
-		return eventgroup;
-	}
-
-	public void setEventGroup(List<WorkshopGroup> eventGroup) {
-		eventgroup = eventGroup;
 	}
 
 	public Supervisor getSupervisor() {

@@ -21,13 +21,6 @@ public class WorkshopGroup {
 	private Integer id;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	
-	private List<Grader> graders ;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Attendant> attendant;
-	
-	@OneToMany(cascade = CascadeType.ALL)
 	private List<GroupFormAnswerSheet> groupformanswersheet;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -51,13 +44,6 @@ public class WorkshopGroup {
 		this.workshop = workshop;
 	}
 
-	public List<Attendant> getAttendant() {
-		return attendant;
-	}
-
-	public void setAttendant(List<Attendant> attendant) {
-		this.attendant = attendant;
-	}
 
 	public List<GroupFormAnswerSheet> getGroupformanswersheet() {
 		return groupformanswersheet;
@@ -67,13 +53,6 @@ public class WorkshopGroup {
 		this.groupformanswersheet = groupformanswersheet;
 	}
 
-	public List<Grader> getGraders() {
-		return graders;
-	}
-
-	public void setGraders(List<Grader> graders) {
-		this.graders = graders;
-	}
 	
 
 }

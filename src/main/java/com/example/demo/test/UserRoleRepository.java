@@ -1,7 +1,8 @@
 package com.example.demo.test;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRoleRepository extends CrudRepository<UserRoleRelation, Integer>{
+public interface UserRoleRepository extends JpaRepository<UserRoleRelation, Integer>{
 
 }

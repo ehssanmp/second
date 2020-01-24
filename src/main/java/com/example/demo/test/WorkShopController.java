@@ -90,76 +90,78 @@ public class WorkShopController {
 	}
 	
 	@PostMapping(path = "/setgroup")
-	public ResponseEntity<HashMap> setGroup(@RequestBody WorkShop workshop){
+	public ResponseEntity<HashMap> setGroup(@RequestBody Ids id){
 		HashMap<String, String> jsn = new HashMap<>();
+		WorkShop workshop=workshopRepository.getOne(id.getWid());
 		List<WorkshopGroup> groupwork= new ArrayList<WorkshopGroup>();
-		WorkshopGroup groupevent= new WorkshopGroup();
 		Supervisor supervisor= new Supervisor();
-		workshop.setEventGroup(groupwork);
-		workshopRepository.save(workshop);
+		for(int i=0;i<id.getGid();++i) {
+			WorkshopGroup groupevent= new WorkshopGroup();
+			groupevent.setWorkshop(workshop);
+			WSGRepoistory.save(groupevent);
+			
+		}
 		jsn.put("msg", "done");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
 	@PostMapping(path="/attendants")
-	public ResponseEntity<HashMap> joinWorkShop(@RequestBody WorkSup workshop){
-		User user=new User();
+	public ResponseEntity<HashMap> joinWorkShop(@RequestBody NumbersIds id){
+		User user=userRepository.getOne(id.getId2());
+		int i;
+		WorkShop workshop= workshopRepository.getOne(id.getId1());
 		HashMap<String, String> jsn = new HashMap<>();
 		List<UserRoleRelation> s= new ArrayList<UserRoleRelation>(); 
+		Attendant Student= new Attendant();
+		Student.setAbsences(0);
+		Student.setIsPassed(false);
+		Student.setScore(0);
 		UserRoleRelation userroleR =new UserRoleRelation();
-		Attendant student=new Attendant();
-		user=userRepository.getOne(workshop.getUs());
-		List<WorkshopGroup> team= new ArrayList<WorkshopGroup>();
-		if(workshop.getWork().getEventGroup()==null) {
-			
-			jsn.put("msg", "its empty");
-			return new  ResponseEntity<HashMap>(jsn,HttpStatus.CONFLICT);
-		}
-		for(int i=0;i<workshop.getWork().getEventGroup().size();++i) {
-			if(workshop.getWork().getEventGroup().get(i).getAttendant().size()==10) {
-				continue;
-			}
-			else{
-				student.setGroups(workshop.getWork().getEventGroup().get(i));
-				student.setIsPassed(false);
-				student.setScore(0);
-				userroleR.setActive(true);
-				userroleR.setStart(workshop.getWork().getStart());
-				userroleR.setEnd(workshop.getWork().getEnd());
-				userroleR.setWorkshoprole(student);
-				s.add(userroleR);
-				if(user.getUserrelation()==null) {
-					
-					user.setUserrelation(s);
-					userRepository.save(user);
-					break;
+		List<Attendant> student=attendantRepository.findAll();
+		List<WorkshopGroup> team=WSGRepoistory.findAll();
+		for(i=0;i<team.size();++i) {
+			if(team.get(i).getWorkshop().getId()==workshop.getId()) {
+				if(team.get(i).getId()==id.getId3()) {
+					userroleR.setActive(true);
+					userroleR.setStart(workshop.getStart());
+					userroleR.setEnd(workshop.getEnd());
+					Student.setGroups(team.get(i));
+					userroleR.setWorkshoprole(Student);
+					s.add(userroleR);
+					if(user.getUserrelation()==null) {
+						user.setUserrelation(s);
+						userRepository.save(user);
+					}
+					else {
+						user.getUserrelation().add(userroleR);
+						userRepository.save(user);
+					}
 				}
-				else {
-					user.getUserrelation().add(userroleR);
-					userRepository.save(user);
-					break;
-				}
-				
 			}
-			
 		}
+		if(i==team.size()) {
+			jsn.put("msg", "workshopcreated successfully");
+			return new ResponseEntity<HashMap>(jsn,HttpStatus.NO_CONTENT);
+		}
+	
 		jsn.put("msg", "workshopcreated successfully");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
 	@PostMapping(path = "/graderreq")
-	public ResponseEntity<HashMap> graderreq(@RequestBody WorkSup eventGrader){
+	public ResponseEntity<HashMap> graderreq(@RequestBody Ids eventGrader){
 		HashMap<String, String> jsn= new HashMap<>();
 		List<User> users= new ArrayList<User>();
-		User usr=userRepository.getOne(eventGrader.getUs());
+		User usr=userRepository.getOne(eventGrader.getGid());
+		WorkShop work=workshopRepository.getOne(eventGrader.getWid());
 		Supervisor supervisor= new Supervisor();
 		users.add(usr);
-		if(eventGrader.getWork().getSupervisor()==null) {
-			eventGrader.getWork().setSupervisor(supervisor);
-			eventGrader.getWork().getSupervisor().setUsers(users);
-			workshopRepository.save(eventGrader.getWork());
+		if(work.getSupervisor()==null) {
+			work.setSupervisor(supervisor);
+			work.getSupervisor().setUsers(users);
+			workshopRepository.save(work);
 		}
 		else {
-			eventGrader.getWork().getSupervisor().getUsers().add(usr);
-			workshopRepository.save(eventGrader.getWork());
+			work.getSupervisor().getUsers().add(usr);
+			workshopRepository.save(work);
 		}
 		
 		jsn.put("msg", "done");
@@ -167,91 +169,167 @@ public class WorkShopController {
 		
 	}
 	
-	@RequestMapping(value = "/grader",method = RequestMethod.POST)
-	public ResponseEntity<HashMap> setgrader(@RequestBody WorkGroupUSer grader){
-		User usr=userRepository.getOne(grader.getId());
+	@PostMapping(value = "/reject")
+	public ResponseEntity<HashMap> rejectgrader(@RequestBody Ids id){
+		WorkShop event= workshopRepository.getOne(id.getWid());
+		User user= userRepository.getOne(id.getGid());
+		for(int i=0;i<event.getSupervisor().getUsers().size();++i) {
+			if(event.getSupervisor().getUsers().get(i).getId()==id.getGid()) {
+				event.getSupervisor().getUsers().remove(user);
+				workshopRepository.save(event);
+			}
+		}
 		HashMap<String, String> jsn= new HashMap<>();
+		jsn.put("msg:", "this guy rejected successfully");
+		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+		
+		
+	}
+	
+	@PostMapping(value = "/show")
+	public ResponseEntity<HashMap> show(@RequestBody int id){
+		HashMap<String, String> jsn= new HashMap<>();
+		WorkShop work=workshopRepository.getOne(id);
+		List<WorkshopGroup> group= WSGRepoistory.findAll();
+		List<User> users= userRepository.findAll();
+		List<Attendant> students= attendantRepository.findAll();
+		List<User> people=userRepository.findAll();
+		List<Grader> graders=graderRepository.findAll();
+		for(int i=0;i<people.size();++i) {
+			for(int b=0;b<people.get(i).getUserrelation().size();++b) {
+				if(people.get(i).getUserrelation().get(b).getWorkshoprole().getiD()==work.getSupervisor().getiD()) {
+					jsn.put("supervisor:", people.get(i).getName());
+				}
+			}
+		}
+		for(int i=0;i<group.size();++i) {
+			if(group.get(i).getWorkshop().getId()==id) {
+				for(int j=0;j<users.size();++j) {
+					for(int k=0;k<users.get(j).getUserrelation().size();++k) {
+						for(int b=0;b<students.size();++b) {
+							if(users.get(j).getUserrelation().get(k).getiD()==students.get(b).getiD()) {
+								if(group.get(i).getId()==students.get(b).getGroups().getId()){
+									jsn.put("Group:", group.get(i).toString());
+									jsn.put("Attendants", users.get(j).getName());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for(int i=0;i<group.size();++i) {
+			if(group.get(i).getWorkshop().getId()==id) {
+				for(int j=0;j<users.size();++j) {
+					for(int k=0;k<users.get(j).getUserrelation().size();++k) {
+						for(int b=0;b<graders.size();++b) {
+							if(users.get(j).getUserrelation().get(k).getiD()==graders.get(b).getiD()) {
+								if(group.get(i).getId()==graders.get(b).getGroup().getId()){
+									jsn.put("Group:", group.get(i).toString());
+									jsn.put("Graders", users.get(j).getName());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+		
+	}
+	@PostMapping(value = "/showgrader")
+	public ResponseEntity<List<User>> showgrader(@RequestBody Numbers id){
+		Supervisor supervisor= superrep.getOne(id.getId());
+		return new ResponseEntity<List<User>>(supervisor.getUsers(),HttpStatus.OK);
+	}
+	@RequestMapping(value = "/grader",method = RequestMethod.POST)
+	public ResponseEntity<HashMap> setgrader(@RequestBody NumbersIds id){
+		WorkShop event= workshopRepository.getOne(id.getId1());
+		int i;
+		User user= userRepository.getOne(id.getId2());
+		HashMap<String, String> jsn= new HashMap<>();
+		List<WorkshopGroup> group= new ArrayList<>();
+		WorkshopGroup gp= new WorkshopGroup();
+		UserRoleRelation userRole= new UserRoleRelation();
 		List<Grader> teacher= new ArrayList<Grader>();
 		List<UserRoleRelation> role= new ArrayList<UserRoleRelation>();
-		UserRoleRelation userRole= new UserRoleRelation();
+		List<WorkshopGroup> team=WSGRepoistory.findAll();
 		Grader master= new Grader();
-		master.setGroup(grader.getEvent().getEventGroup().get(grader.getIndx()));
-		userRole.setActive(true);
-		userRole.setStart(grader.getEvent().getStart());
-		userRole.setEnd(grader.getEvent().getEnd());
-		userRole.setWorkshoprole(master);
-		role.add(userRole);
-		if(usr.getUserrelation().isEmpty()) {
-			usr.setUserrelation(role);
-			grader.getEvent().getEventGroup().get(grader.getIndx()).getGraders().add(master);
-			userRepository.save(usr);
+		for(i=0;i<team.size();++i) {
+			if(team.get(i).getWorkshop().getId()==event.getId()) {
+				if(team.get(i).getId()==id.getId3()) {
+					master.setGroup(team.get(i));
+					userRole.setActive(true);
+					userRole.setStart(event.getStart());
+					userRole.setEnd(event.getEnd());
+					userRole.setWorkshoprole(master);
+					role.add(userRole);
+					if(user.getUserrelation()==null) {
+						user.setUserrelation(role);
+						userRepository.save(user);
+					}
+					else {
+						user.getUserrelation().add(userRole);
+						userRepository.save(user);
+					}
+					
+				}
+			}
 		}
-		else {
-			usr.getUserrelation().add(userRole);
-			userRepository.save(usr);
+		if(i==team.size()) {
+			jsn.put("msg", "workshopcreated successfully");
+			return new ResponseEntity<HashMap>(jsn,HttpStatus.NO_CONTENT);
 		}
 		jsn.put("msg", "workshopcreated successfully");
-		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+		return new ResponseEntity<HashMap>(jsn,HttpStatus.NO_CONTENT);
+		
 	}
 	 
 	@PostMapping(name = "/role")
-	public ResponseEntity<HashMap> role(@RequestBody WorkSup role){
+	public ResponseEntity<HashMap> role(@RequestBody Ids id){
+	
 		HashMap<String, String> jsn= new HashMap<>();
-		User newuser= userRepository.getOne(role.getUs());
-		for(int i=0;i<newuser.getUserrelation().size();++i) {
-			if(newuser.getUserrelation().get(i).isActive()==false) {
-				continue;
-			}
-			else {
-				if(role.getWork().getSupervisor().getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
-					jsn.put("msg", "supervisor");
+		WorkShop work=workshopRepository.getOne(id.getWid());
+		List<WorkshopGroup> group= WSGRepoistory.findAll();
+		User users= userRepository.getOne(id.getGid());
+		List<Attendant> students= attendantRepository.findAll();
+		List<User> people=userRepository.findAll();
+		List<Grader> graders=graderRepository.findAll();
+		for(int i=0;i<people.size();++i) {
+			for(int b=0;b<people.get(i).getUserrelation().size();++b) {
+				if(people.get(i).getUserrelation().get(b).getWorkshoprole().getiD()==work.getSupervisor().getiD()) {
 					return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 				}
-				else {
-					break;
-				}
 			}
 		}
-		for(int i=0;i<newuser.getUserrelation().size();++i) {
-			if(newuser.getUserrelation().get(i).isActive()==false) {
-				continue;
-			}
-			else {
-				for(int n=0;n<role.getWork().getEventGroup().size();++n) {
-					for(int p=0;p<role.getWork().getEventGroup().get(n).getAttendant().size();++p) {
-						if(role.getWork().getEventGroup().get(n).getAttendant().get(p).getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
-							jsn.put("msg", "attendant");
-							return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-						}
-						else {
-							continue;
+		for(int i=0;i<group.size();++i) {
+			if(group.get(i).getWorkshop().getId()==id.getWid()) {
+					for(int k=0;k<users.getUserrelation().size();++k) {
+						for(int b=0;b<students.size();++b) {
+							if(users.getUserrelation().get(k).getiD()==students.get(b).getiD()) {
+								if(group.get(i).getId()==students.get(b).getGroups().getId()){
+									return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+								}
+							}
 						}
 					}
 				}
-			}
 		}
-		
-		for(int i=0;i<newuser.getUserrelation().size();++i) {
-			if(newuser.getUserrelation().get(i).isActive()==false) {
-				continue;
-			}
-			else {
-				for(int n=0;n<role.getWork().getEventGroup().size();++n) {
-					for(int p=0;p<role.getWork().getEventGroup().get(n).getGraders().size();++p) {
-						if(role.getWork().getEventGroup().get(n).getGraders().get(p).getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
-							jsn.put("msg", "grader");
-							return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-						}
-						else {
-							continue;
+		for(int i=0;i<group.size();++i) {
+			if(group.get(i).getWorkshop().getId()==id.getWid()) {
+					for(int k=0;k<users.getUserrelation().size();++k) {
+						for(int b=0;b<students.size();++b) {
+							if(users.getUserrelation().get(k).getiD()==graders.get(b).getiD()) {
+								if(group.get(i).getId()==graders.get(b).getGroup().getId()){
+									return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+								}
+							}
 						}
 					}
 				}
-			}
 		}
-		
-		
-		jsn.put("msg", "workshopcreated successfully");
+		jsn.put("msg", "this user has no role in this workshop");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 		
 	}
