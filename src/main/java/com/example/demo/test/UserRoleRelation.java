@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,9 +24,6 @@ public class UserRoleRelation {
 	private Date End;
 	
 	private boolean Active;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	private User user;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private WorkshopRole workshoprole;
@@ -60,14 +58,6 @@ public class UserRoleRelation {
 
 	public void setActive(boolean active) {
 		Active = active;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public WorkshopRole getWorkshoprole() {

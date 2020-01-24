@@ -6,9 +6,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -16,6 +18,9 @@ import javax.persistence.TemporalType;
 
 import org.apache.tomcat.jni.Time;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class WorkShop {
@@ -61,6 +66,7 @@ public class WorkShop {
 	private List<Form> form;
 	
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	private List<WorkshopGroup> eventgroup;
 
 	@OneToOne(cascade = CascadeType.ALL)

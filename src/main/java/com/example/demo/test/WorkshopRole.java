@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,9 +24,6 @@ public class WorkshopRole {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected int iD;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-    List<UserRoleRelation> userrolerelations ;
 
 	public int getiD() {
 		return iD;
@@ -33,13 +31,5 @@ public class WorkshopRole {
 
 	public void setiD(int iD) {
 		this.iD = iD;
-	}
-
-	public List<UserRoleRelation> getUserrolerelations() {
-		return userrolerelations;
-	}
-
-	public void setUserrolerelations(List<UserRoleRelation> userrolerelations) {
-		this.userrolerelations = userrolerelations;
 	}
 }

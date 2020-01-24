@@ -51,8 +51,8 @@ public class WorkShopController {
 	
 	Session session;
 	@GetMapping(path="/workshophome")
-	public ResponseEntity<Iterable<WorkShop>>  ShowWorkShops(){
-		return new ResponseEntity<Iterable<WorkShop>>(workshopRepository.findAll(),HttpStatus.OK);
+	public ResponseEntity<List<WorkShop>>  ShowWorkShops(){
+		return new ResponseEntity<List<WorkShop>>(workshopRepository.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(path= "/users")
@@ -66,41 +66,37 @@ public class WorkShopController {
 		List<UserRoleRelation> s= new ArrayList<UserRoleRelation>(); 
 		UserRoleRelation userroleR =new UserRoleRelation();
 		Supervisor supervisor= new Supervisor();
-		supervisor.setWorkshop(wrk.getWork());
 		User usr=new User(); 
 		usr=userRepository.getOne(wrk.getUs());
 		System.out.println(usr.getUsername());
 		userroleR.setActive(true);
 		userroleR.setStart(wrk.getWork().getStart());
 		userroleR.setEnd(wrk.getWork().getEnd());
-		userroleR.setUser(usr);
 		userroleR.setWorkshoprole(supervisor);
 		s.add(userroleR);
 		if(usr.getUserrelation().isEmpty()) {
-			
 			usr.setUserrelation(s);
 			wrk.getWork().setSupervisor(supervisor);
 			userRepository.save(usr);
+			workshopRepository.save(wrk.getWork());
 		}
 		else {
-			supervisor.setUserrolerelations(s);
 			usr.getUserrelation().add(userroleR);
 			userRepository.save(usr);
+			workshopRepository.save(wrk.getWork());
 		}
 		jsn.put("msg", "workshopcreated successfully");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
 	
 	@PostMapping(path = "/setgroup")
-	public ResponseEntity<HashMap> setGroup(@RequestBody WorkSup workshop){
+	public ResponseEntity<HashMap> setGroup(@RequestBody WorkShop workshop){
 		HashMap<String, String> jsn = new HashMap<>();
 		List<WorkshopGroup> groupwork= new ArrayList<WorkshopGroup>();
 		WorkshopGroup groupevent= new WorkshopGroup();
-		for(int i=0;i<workshop.getUs();++i) {
-			groupwork.add(groupevent);
-		}
-		workshop.getWork().setEventGroup(groupwork);
-		workshopRepository.save(workshop.getWork());
+		Supervisor supervisor= new Supervisor();
+		workshop.setEventGroup(groupwork);
+		workshopRepository.save(workshop);
 		jsn.put("msg", "done");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
@@ -129,7 +125,6 @@ public class WorkShopController {
 				userroleR.setActive(true);
 				userroleR.setStart(workshop.getWork().getStart());
 				userroleR.setEnd(workshop.getWork().getEnd());
-				userroleR.setUser(user);
 				userroleR.setWorkshoprole(student);
 				s.add(userroleR);
 				if(user.getUserrelation()==null) {
@@ -139,7 +134,6 @@ public class WorkShopController {
 					break;
 				}
 				else {
-					student.setUserrolerelations(s);
 					user.getUserrelation().add(userroleR);
 					userRepository.save(user);
 					break;
@@ -149,8 +143,6 @@ public class WorkShopController {
 			
 		}
 		jsn.put("msg", "workshopcreated successfully");
-		workshopRepository.save(workshop.getWork());
-		attendantRepository.save(student);
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 	}
 	@PostMapping(path = "/graderreq")
@@ -158,16 +150,21 @@ public class WorkShopController {
 		HashMap<String, String> jsn= new HashMap<>();
 		List<User> users= new ArrayList<User>();
 		User usr=userRepository.getOne(eventGrader.getUs());
+		Supervisor supervisor= new Supervisor();
 		users.add(usr);
-		eventGrader.getWork().getSupervisor().setUsers(users);
-		workshopRepository.save(eventGrader.getWork());
+		if(eventGrader.getWork().getSupervisor()==null) {
+			eventGrader.getWork().setSupervisor(supervisor);
+			eventGrader.getWork().getSupervisor().setUsers(users);
+			workshopRepository.save(eventGrader.getWork());
+		}
+		else {
+			eventGrader.getWork().getSupervisor().getUsers().add(usr);
+			workshopRepository.save(eventGrader.getWork());
+		}
+		
 		jsn.put("msg", "done");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 		
-	}
-	@GetMapping(name = "/setgrader")
-	public ResponseEntity<List<User>>showGrader(@RequestBody WorkShop work ){
-		return new ResponseEntity<List<User>>(work.getSupervisor().getUsers(),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/grader",method = RequestMethod.POST)
@@ -182,7 +179,6 @@ public class WorkShopController {
 		userRole.setActive(true);
 		userRole.setStart(grader.getEvent().getStart());
 		userRole.setEnd(grader.getEvent().getEnd());
-		userRole.setUser(usr);
 		userRole.setWorkshoprole(master);
 		role.add(userRole);
 		if(usr.getUserrelation().isEmpty()) {
@@ -191,7 +187,6 @@ public class WorkShopController {
 			userRepository.save(usr);
 		}
 		else {
-			master.setUserrolerelations(role);
 			usr.getUserrelation().add(userRole);
 			userRepository.save(usr);
 		}
@@ -202,46 +197,62 @@ public class WorkShopController {
 	@PostMapping(name = "/role")
 	public ResponseEntity<HashMap> role(@RequestBody WorkSup role){
 		HashMap<String, String> jsn= new HashMap<>();
-		User us= new User();
-		us=userRepository.getOne(role.getUs());
-		for(int i=0 ;i<us.getUserrelation().size();++i) {
-			if(us.getUserrelation().get(i).getWorkshoprole().equals(role.getWork().getSupervisor())) {
-				jsn.put("msg", "this guy is supervisor");
-				return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-			}
-			else {
+		User newuser= userRepository.getOne(role.getUs());
+		for(int i=0;i<newuser.getUserrelation().size();++i) {
+			if(newuser.getUserrelation().get(i).isActive()==false) {
 				continue;
 			}
-		}
-		
-		for(int i=0;i<us.getUserrelation().size();++i) {
-			for(int n=0;n<role.getWork().getEventGroup().size();++n) {
-				for(int p=0;p<role.getWork().getEventGroup().get(n).getAttendant().size();++p) {
-					if(us.getUserrelation().get(i).getWorkshoprole().equals(role.getWork().getEventGroup().get(n).getAttendant().get(p))) {
-						jsn.put("msg", "this guy is attendant");
-						return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-					}
-					else {
-						continue;
-					}
-				}
-			}
-		}
-		for(int i=0;i<us.getUserrelation().size();++i) {
-			for(int n=0;n<role.getWork().getEventGroup().size();++n) {
-				if(us.getUserrelation().get(i).getWorkshoprole().equals(role.getWork().getEventGroup().get(n).getGraders())) {
-					jsn.put("msg", "this guy is attendant");
+			else {
+				if(role.getWork().getSupervisor().getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
+					jsn.put("msg", "supervisor");
 					return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 				}
 				else {
-					continue;
+					break;
 				}
 			}
 		}
-		jsn.put("msg", "this guy is nothing");
+		for(int i=0;i<newuser.getUserrelation().size();++i) {
+			if(newuser.getUserrelation().get(i).isActive()==false) {
+				continue;
+			}
+			else {
+				for(int n=0;n<role.getWork().getEventGroup().size();++n) {
+					for(int p=0;p<role.getWork().getEventGroup().get(n).getAttendant().size();++p) {
+						if(role.getWork().getEventGroup().get(n).getAttendant().get(p).getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
+							jsn.put("msg", "attendant");
+							return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+						}
+						else {
+							continue;
+						}
+					}
+				}
+			}
+		}
+		
+		for(int i=0;i<newuser.getUserrelation().size();++i) {
+			if(newuser.getUserrelation().get(i).isActive()==false) {
+				continue;
+			}
+			else {
+				for(int n=0;n<role.getWork().getEventGroup().size();++n) {
+					for(int p=0;p<role.getWork().getEventGroup().get(n).getGraders().size();++p) {
+						if(role.getWork().getEventGroup().get(n).getGraders().get(p).getiD()==newuser.getUserrelation().get(i).getWorkshoprole().getiD()) {
+							jsn.put("msg", "grader");
+							return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
+						}
+						else {
+							continue;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		jsn.put("msg", "workshopcreated successfully");
 		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 		
-		
 	}
-	
 }
