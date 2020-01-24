@@ -234,18 +234,14 @@ public class WorkShopController {
 		
 	}
 	@PostMapping(value = "/showgrader")
-	public ResponseEntity<List<User>> showgrader(@RequestBody Numbers id){
-		List<User> users= new ArrayList<User>();
+	public ResponseEntity<HashMap> showgrader(@RequestBody Numbers id){
+		HashMap<String, Integer> users= new HashMap<>();
 		WorkShop work=workshopRepository.getOne(id.getId());
-		int a=work.getSupervisor().getIds().get(0);
-		User user= userRepository.getOne(a);
-		System.out.println(user.getName());
-		//for(int i=0;i<work.getSupervisor().getIds().size();++i) {
-			//User user= userRepository.getOne(4);
-			//users.add(user);
-		//}
+		for(int i=0;i<work.getSupervisor().getIds().size();++i) {
+			users.put("hf", work.getSupervisor().getIds().get(i));
+		}
 		
-		return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+		return new ResponseEntity<HashMap>(users,HttpStatus.OK);
 	}
 	@RequestMapping(value = "/grader",method = RequestMethod.POST)
 	public ResponseEntity<HashMap> setgrader(@RequestBody NumbersIds id){
