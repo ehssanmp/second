@@ -38,6 +38,9 @@ public class WorkShopController {
 	UserRoleRepository userrolerep;
 	
 	@Autowired
+	WorkshopRoleRepository workrole;
+	
+	@Autowired
 	WorkShopGroupRepository WSGRepoistory;
 	
 	@Autowired
@@ -149,18 +152,26 @@ public class WorkShopController {
 	@PostMapping(path = "/graderreq")
 	public ResponseEntity<HashMap> graderreq(@RequestBody Ids eventGrader){
 		HashMap<String, String> jsn= new HashMap<>();
-		List<User> users= new ArrayList<User>();
+		List<String> names= new ArrayList<String>();
+		List<Integer> var= new ArrayList<Integer>();
 		User usr=userRepository.getOne(eventGrader.getGid());
 		WorkShop work=workshopRepository.getOne(eventGrader.getWid());
+		String name;
+		Integer num;
+		name=usr.getName();
+		num=usr.getId();
+		names.add(name);
+		var.add(num);
 		Supervisor supervisor= new Supervisor();
-		users.add(usr);
 		if(work.getSupervisor()==null) {
 			work.setSupervisor(supervisor);
-			work.getSupervisor().setUsers(users);
+			work.getSupervisor().setNames(names);
+			work.getSupervisor().setIds(var);
 			workshopRepository.save(work);
 		}
 		else {
-			work.getSupervisor().getUsers().add(usr);
+			work.getSupervisor().getNames().add(name);
+			work.getSupervisor().getIds().add(num);
 			workshopRepository.save(work);
 		}
 		
@@ -169,27 +180,11 @@ public class WorkShopController {
 		
 	}
 	
-	@PostMapping(value = "/reject")
-	public ResponseEntity<HashMap> rejectgrader(@RequestBody Ids id){
-		WorkShop event= workshopRepository.getOne(id.getWid());
-		User user= userRepository.getOne(id.getGid());
-		for(int i=0;i<event.getSupervisor().getUsers().size();++i) {
-			if(event.getSupervisor().getUsers().get(i).getId()==id.getGid()) {
-				event.getSupervisor().getUsers().remove(user);
-				workshopRepository.save(event);
-			}
-		}
-		HashMap<String, String> jsn= new HashMap<>();
-		jsn.put("msg:", "this guy rejected successfully");
-		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
-		
-		
-	}
 	
 	@PostMapping(value = "/show")
-	public ResponseEntity<HashMap> show(@RequestBody int id){
+	public ResponseEntity<HashMap> show(@RequestBody Numbers id){
 		HashMap<String, String> jsn= new HashMap<>();
-		WorkShop work=workshopRepository.getOne(id);
+		WorkShop work=workshopRepository.getOne(id.getId());
 		List<WorkshopGroup> group= WSGRepoistory.findAll();
 		List<User> users= userRepository.findAll();
 		List<Attendant> students= attendantRepository.findAll();
@@ -203,7 +198,7 @@ public class WorkShopController {
 			}
 		}
 		for(int i=0;i<group.size();++i) {
-			if(group.get(i).getWorkshop().getId()==id) {
+			if(group.get(i).getWorkshop().getId()==id.getId()) {
 				for(int j=0;j<users.size();++j) {
 					for(int k=0;k<users.get(j).getUserrelation().size();++k) {
 						for(int b=0;b<students.size();++b) {
@@ -219,7 +214,7 @@ public class WorkShopController {
 			}
 		}
 		for(int i=0;i<group.size();++i) {
-			if(group.get(i).getWorkshop().getId()==id) {
+			if(group.get(i).getWorkshop().getId()==id.getId()) {
 				for(int j=0;j<users.size();++j) {
 					for(int k=0;k<users.get(j).getUserrelation().size();++k) {
 						for(int b=0;b<graders.size();++b) {
@@ -240,8 +235,17 @@ public class WorkShopController {
 	}
 	@PostMapping(value = "/showgrader")
 	public ResponseEntity<List<User>> showgrader(@RequestBody Numbers id){
-		Supervisor supervisor= superrep.getOne(id.getId());
-		return new ResponseEntity<List<User>>(supervisor.getUsers(),HttpStatus.OK);
+		List<User> users= new ArrayList<User>();
+		WorkShop work=workshopRepository.getOne(id.getId());
+		int a=work.getSupervisor().getIds().get(0);
+		User user= userRepository.getOne(a);
+		System.out.println(user.getName());
+		//for(int i=0;i<work.getSupervisor().getIds().size();++i) {
+			//User user= userRepository.getOne(4);
+			//users.add(user);
+		//}
+		
+		return new ResponseEntity<List<User>>(users,HttpStatus.OK);
 	}
 	@RequestMapping(value = "/grader",method = RequestMethod.POST)
 	public ResponseEntity<HashMap> setgrader(@RequestBody NumbersIds id){
@@ -282,7 +286,7 @@ public class WorkShopController {
 			return new ResponseEntity<HashMap>(jsn,HttpStatus.NO_CONTENT);
 		}
 		jsn.put("msg", "workshopcreated successfully");
-		return new ResponseEntity<HashMap>(jsn,HttpStatus.NO_CONTENT);
+		return new ResponseEntity<HashMap>(jsn,HttpStatus.OK);
 		
 	}
 	 
